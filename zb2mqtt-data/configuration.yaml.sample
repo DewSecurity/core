@@ -1,0 +1,12 @@
+homeassistant: true
+permit_join: true
+mqtt:
+  base_topic: zigbee2mqtt
+  server: 'mqtt://localhost:1883'
+  client_id: zb-mqtt
+  include_device_information: true
+serial:
+  #disable_led: true
+  port: /dev/ttyACM0
+advanced:
+  network_key: GENERATE

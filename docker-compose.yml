@@ -1,0 +1,52 @@
+version: "2"
+
+services:
+  mosquitto:
+    container_name: mqtt
+    image: eclipse-mosquitto:latest
+    restart: unless-stopped
+    network_mode: host
+    #ports:
+    #  - "1883:1883"
+    #  - "9001:9001"
+    volumes:
+      - ./mqtt-data/config/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./mqtt-data/data:/mosquitto/data
+      - ./mqtt-data/log:/mosquitto/log
+
+  hass:
+    container_name: hass
+    depends_on:
+      - mosquitto
+      - postgres
+    image: homeassistant/home-assistant:stable
+    environment:
+      - TZ=Asia/Bangkok
+    network_mode: "host"
+    volumes:
+      - ./hass-data:/config
+    restart: unless-stopped
+
+  Zigbee2MQTT:
+    container_name: zb2mqtt
+    image: koenkk/zigbee2mqtt
+    volumes:
+      - ./zb2mqtt-data:/app/data
+      - /run/udev:/run/udev:ro
+    devices:
+      - /dev/ttyACM0:/dev/ttyACM0
+    restart: unless-stopped
+    network_mode: host
+    privileged: true
+    environment:
+      - TZ=Asia/Bangkok
+
+  postgres:
+    container_name: postgres-hass
+    image: postgres
+    network_mode: host
+    volumes:
+      - ./postgres-data/:/var/lib/postgresql/data
+    env_file:
+      - postgres.env
+    restart: unless-stopped

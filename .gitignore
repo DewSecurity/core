@@ -1,0 +1,8 @@
+*.env
+mqtt-data/*/*
+!mqtt-data/config/mosquitto.conf.sample
+hass-data/*
+!hass-data/configuration.yaml.sample
+zb2mqtt-data/*
+!zb2mqtt-data/configuration.yaml.sample
+postgres-data
